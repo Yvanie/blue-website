@@ -1122,7 +1122,7 @@ input, textarea {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 130px 50px; /* Padding adjusted for height */
+    padding: 130px 60px; /* Padding adjusted for height */
     text-align: center;
     color: #ffffff;
 }
@@ -1257,7 +1257,7 @@ input, textarea {
 /* Responsive styles */
 @media (max-width: 768px) {
     .cont-header {
-        padding: 80px 20px; /* Reduce padding for smaller screens */
+        padding: 70px 20px; /* Reduce padding for smaller screens */
     }
     
     .cont-info {
