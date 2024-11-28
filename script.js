@@ -83,3 +83,107 @@ function slideLogos() {
 
 // Slide logos every 3 seconds
 setInterval(slideLogos, 3000);
+
+
+/// Toggle the visibility of the full description
+function toggleDescription(serviceId) {
+    const desc = document.getElementById(`desc-${serviceId}`);
+    const readMoreButton = document.querySelector(`#desc-${serviceId} + .read-more`);
+
+    // Close all descriptions that are expanded
+    const allDescriptions = document.querySelectorAll('.description');
+    const allButtons = document.querySelectorAll('.read-more');
+    
+    allDescriptions.forEach((descElement, index) => {
+        if (descElement !== desc && descElement.style.webkitLineClamp !== "4") {
+            // Collapse the other descriptions
+            descElement.style.webkitLineClamp = "4";
+            allButtons[index].innerText = "Read More"; // Reset button text
+        }
+    });
+
+    // Toggle the clicked description
+    if (desc.style.webkitLineClamp === "4") {
+        // Expand the description
+        desc.style.webkitLineClamp = "unset"; // Remove truncation
+        readMoreButton.innerText = "Read Less"; // Change button text to 'Read Less'
+    } else {
+        // Collapse the description
+        desc.style.webkitLineClamp = "4"; // Limit to 4 lines
+        readMoreButton.innerText = "Read More"; // Change button text back to 'Read More'
+    }
+}
+
+// Initialize all descriptions to be truncated when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    const allDescriptions = document.querySelectorAll(".description");
+    allDescriptions.forEach(desc => {
+        desc.style.webkitLineClamp = "4"; // Initially truncate to 4 lines
+    });
+});
+
+
+
+
+let currentPage = 1;
+const postsPerPage = 6;
+
+const blogPosts = document.querySelectorAll('.single-post');
+
+const renderPosts = () => {
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+
+    blogPosts.forEach((post, index) => {
+        if (index >= startIndex && index < endIndex) {
+            post.style.display = 'block';
+        } else {
+            post.style.display = 'none';
+        }
+    });
+};
+
+const renderPagination = () => {
+    const totalPages = Math.ceil(blogPosts.length / postsPerPage);
+    const pageNumbersContainer = document.getElementById('page-numbers');
+    pageNumbersContainer.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.classList.add('pagination-btn');
+        pageButton.textContent = i;
+        pageButton.onclick = () => {
+            currentPage = i;
+            renderPosts();
+            renderPagination();
+        };
+        if (i === currentPage) {
+            pageButton.style.backgroundColor = '#2980b9';
+        }
+        pageNumbersContainer.appendChild(pageButton);
+    }
+
+    document.getElementById('prev-page').disabled = currentPage === 1;
+    document.getElementById('next-page').disabled = currentPage === totalPages;
+};
+
+document.getElementById('prev-page').onclick = () => {
+    if (currentPage > 1) {
+        currentPage--;
+        renderPosts();
+        renderPagination();
+    }
+};
+
+document.getElementById('next-page').onclick = () => {
+    const totalPages = Math.ceil(blogPosts.length / postsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderPosts();
+        renderPagination();
+    }
+};
+
+// Initial render
+renderPosts();
+renderPagination();
