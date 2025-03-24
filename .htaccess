@@ -1,0 +1,17 @@
+
+
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:23473477:
+Options -Indexes
+RewriteEngine On
+# Si le fichier ou le dossier existe, on l'affiche directement
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Sinon, on redirige vers index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+<Files .env>
+    Require all denied
+</Files>
+
+# est ce que nous sommes en train de modifier ce qui se trouve dans le dossier de wamp?oui
