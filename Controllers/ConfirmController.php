@@ -12,19 +12,27 @@ class ConfirmController extends MailController
     }
 
   public function enableMail($tokenconfirm){
-    $subscriber=new Newsletters();   
-    $id=$subscriber->lireBy(['tokenconfirm'=>$tokenconfirm])[0]->idNewsletter;
-    $subscriber->setStatus('enabled')->update();
-  }
-
-    public function setRender()
-    { 
-        $myjs=[];
+    $subscriber=new Newsletters();
+    $getInfo=$subscriber->lireBy(['confirmtoken'=>$_GET['token'], 'status'=>'disabled'])[0];
+    if($getInfo){
+      if($subscriber->setStatus('enabled')->update($getInfo->idNewsletters)){
         
-        if(isset($_SESSION['id'])){
-            $myjs[]='Public/js/owner/confirm';
-            return $this->render("Frontend/confirm", [], $myjs, 'app'); 
-        }
+        return ["email"=>$getInfo->email];
+      }
+    }else{
+      return ["email"=>"error"];
     }
+  }
+  public function setRender(){
+
+    if($this->enableMail($_GET['token'])['email']=="error"){
+      header("index.php?p=home");
+    }else{
+      $myjs=[];
+      $mycss=[];
+      $myjs[]='Public/js/owner/confirm';
+      return $this->render("Frontend/confirm", [], $myjs, 'default'); 
+    }
+  }
 }
 

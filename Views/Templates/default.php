@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Ocean Group | <?= ucfirst($_GET['p'])  ?></title>
+    <title>Blue Ocean Group | <?= isset($_GET['p']) ? ucfirst($_GET['p']) : 'Accueil' ?></title>
      <!-- Bootstrap 4 CSS -->
   
     <link rel="stylesheet" href="Public/css/style.css">
-    <?php 
-    if(isset($mycss)){
-        foreach($mycss as $css){
-            echo '<link href="'.$css.'.css" rel="stylesheet">';
-        }
-    } ?>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="https://yvanie.github.io/blue-website/img/logo.jpg">
     <meta property="og:site_name" content="Blue Ocean Group" />
@@ -24,6 +19,12 @@
     <meta property="og:image" content="https://yvanie.github.io/blue-website/img/logo.jpg" />
     <meta property="og:image:secure_url" content="https://yvanie.github.io/blue-website/" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <?php 
+    if(isset($mycss)){
+        foreach($mycss as $css){
+            echo '<link href="'.$css.'.css" rel="stylesheet">';
+        }
+    } ?>
 </head>
 <body>
 <div class="info-navbar">

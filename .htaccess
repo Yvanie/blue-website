@@ -1,5 +1,3 @@
-
-
 # DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:23473477:
 Options -Indexes
 RewriteEngine On
@@ -15,3 +13,48 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 </Files>
 
 # est ce que nous sommes en train de modifier ce qui se trouve dans le dossier de wamp?oui
+
+# Empêcher l'affichage du contenu des répertoires
+Options -Indexes
+
+# Bloquer l'accès à tous les fichiers par défaut
+<FilesMatch "^.*$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Autoriser uniquement l'accès à index.php
+<FilesMatch "^index\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Autoriser l'accès aux ressources statiques dans le dossier Public
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Rediriger toutes les requêtes vers index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Protection supplémentaire pour les fichiers sensibles
+<FilesMatch "^(\.env|composer\.json|composer\.lock|package\.json|package-lock\.json)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Empêcher l'accès aux fichiers .htaccess et .git
+<FilesMatch "^\.">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Protection contre les injections XSS et autres attaques
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>

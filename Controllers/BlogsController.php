@@ -119,7 +119,7 @@ class BlogsController extends Controller
                     J’ai publié de nouveaux contenus passionnants que vous ne voudrez pas manquer ! 🔥 <br><br>  
                     Je peux même vous partager un extrait exclusif. 💡  
                     Découvrez les dernières mises à jour dès maintenant ! 🚀<br><br>  
-                    👉 <a href="index.php?p=blogs&id='.$lastId.'">Cliquez ici pour en savoir plus</a> 👈<br><br>
+                    👉 <a href="'.URL.'/index.php?p=blogs&id='.$lastId.'">Cliquez ici pour en savoir plus</a> 👈<br><br>
                     <p>Si vous ne voullez plus recevoir ces notifications, vous pouvez vous désabonner en cliquant sur le lien ci-dessous :
                         </p><br><br>
                     <a href="'.URL.'/index.php?p=unsubscribe&token='.$value->confirmtoken.'">Désabonner</a><br><br>

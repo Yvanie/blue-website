@@ -29,6 +29,8 @@ class Main
      */
     public function start(): void
     {
+        // Vérification de sécurité pour l'accès direct aux fichiers
+        $this->checkDirectAccess();
         
         $this->startSession();
 
@@ -281,5 +283,52 @@ class Main
 
         $controller = new $controllerName;
         $controller->setRender();
+    }
+
+    /**
+     * Vérifie si l'accès au fichier est autorisé
+     * 
+     * @throws \Exception
+     */
+    private function checkDirectAccess(): void
+    {
+        // Obtenir le nom du script en cours d'exécution
+        $scriptName = basename($_SERVER['SCRIPT_FILENAME']);
+        
+        // Vérifier si on accède directement à un fichier PHP autre que index.php
+        if ($scriptName !== 'index.php') {
+            // Liste des extensions de fichiers autorisées pour les ressources statiques
+            $allowedExtensions = ['css', 'js', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'svg', 'woff', 'woff2', 'ttf', 'eot', 'pdf'];
+            
+            $fileExtension = pathinfo($scriptName, PATHINFO_EXTENSION);
+            
+            // Si ce n'est pas une ressource statique autorisée
+            if (!in_array(strtolower($fileExtension), $allowedExtensions)) {
+                header('HTTP/1.0 403 Forbidden');
+                die('Accès direct aux fichiers non autorisé');
+            }
+        }
+
+        // Vérifier si on tente d'accéder à des fichiers sensibles
+        $requestedPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $sensitiveFiles = ['.env', 'composer.json', 'composer.lock', 'package.json', 'package-lock.json', '.htaccess', '.git'];
+        
+        foreach ($sensitiveFiles as $file) {
+            if (strpos($requestedPath, $file) !== false) {
+                header('HTTP/1.0 403 Forbidden');
+                die('Accès non autorisé');
+            }
+        }
+
+        // Vérifier l'accès aux dossiers sensibles
+        $sensitiveFolders = ['Core', 'Models', 'Controllers', 'Views'];
+        $currentPath = $_SERVER['REQUEST_URI'];
+        
+        foreach ($sensitiveFolders as $folder) {
+            if (preg_match("#^/{$folder}/#i", $currentPath)) {
+                header('HTTP/1.0 403 Forbidden');
+                die('Accès non autorisé');
+            }
+        }
     }
 }

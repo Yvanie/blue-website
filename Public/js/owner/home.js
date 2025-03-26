@@ -26,7 +26,7 @@ $(function() {
                ${blog.content}
             </p>
             <div class="button-container">
-                <a href="index.php?p=blog&id=${blog.idBlogs}" class="btn">
+                <a href="index.php?p=blogs&id=${blog.idBlogs}" class="btn">
                     <i class="fas fa-book-open"></i> Read More
                 </a>
             </div>
