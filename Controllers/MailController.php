@@ -46,51 +46,59 @@ public function lireBy(array $criteres){
 }
 
 public function create(){
-    $data=[];
+    $data = [];
     if($_POST){
         $dataSanit = [];
         foreach($_POST as $cle => $valeur){
             if(empty($valeur)){
-                $data = ['type'=>'error', 'message'=> "Veuillez remplir tous les champs"];
-                return $data;
-                exit;
+                return ['type' => 'error', 'message' => "Veuillez remplir tous les champs"];
             }
             $dataSanit[$cle] = htmlspecialchars($valeur);
-            $dataSanit['confirmtoken'] = $this->generate_uuid();
         }
-        $dataSanit['createAt']= date('Y-m-d H:i:s');
+
+        // Vérifier si l'email existe déjà
+        $existingEmail = $this->instance->lireBy(['email' => $dataSanit['email']]);
+        if($existingEmail && count($existingEmail) > 0) {
+            return ['type' => 'error', 'message' => "Cette adresse email est déjà inscrite à la newsletter"];
+        }
+
+        // Si l'email n'existe pas, continuer avec l'inscription
+        $dataSanit['confirmtoken'] = $this->generate_uuid();
+        $dataSanit['createAt'] = date('Y-m-d H:i:s');
+        
         if($this->instance->hydrated($dataSanit)->Create()){
             $mail = new PHPMailer(true);
             try {
                 //Server settings
-                                 //Enable verbose debug output
-                $mail->isSMTP();                                            //Send using SMTP
-                $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-                $mail->Username   = 'nwouatouyvanienoelle@gmail.com';                     //SMTP username
-                $mail->Password   = 'rkyy iewa ozhj uqek';                               //SMTP password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-                $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'nwouatouyvanienoelle@gmail.com';
+                $mail->Password   = 'rkyy iewa ozhj uqek';
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                $mail->Port       = 465;
 
                 //Recipients
                 $mail->setFrom('nwouatouyvanienoelle@gmail.com', 'Blue Ocean Group');
-                    $mail->addAddress($dataSanit['email']);     //Add a recipient
+                $mail->addAddress($dataSanit['email']);
 
                 //Content
-                $mail->isHTML(true);                                  //Set email format to HTML
-                $mail->Subject = '📩 Confirmez votre adresse e-mail';  
+                $mail->isHTML(true);
+                $mail->Subject = '📩 Confirmez votre adresse e-mail';
                 $mail->Body = 'Bonjour, <br><br>  
                 Merci de vous être inscrit ! 🎉 Pour finaliser votre inscription et accéder à toutes nos nouveautés, veuillez confirmer votre adresse e-mail. 📧<br><br>  
                 Cliquez sur le lien ci-dessous pour activer votre compte :<br><br>  
                 👉 <a href="'.URL.'/index.php?p=confirm&token='.$dataSanit['confirmtoken'].'">Confirmer mon e-mail</a> 👈<br><br>  
                 Si vous n\'avez pas fait cette demande, ignorez simplement ce message. <br><br>  
-                À bientôt ! 🚀';  
+                À bientôt ! 🚀';
 
                 $mail->send();
+                return ['type' => 'success', 'message' => "Vérifier votre boite mail pour confirmer votre inscription"];
             } catch (Exception $e) {
+                return ['type' => 'error', 'message' => "Une erreur est survenue lors de l'envoi du mail"];
             }
-            $data = ['type'=>'success', 'message'=> "Vérifier votre boite mail pour confirmer votre inscription"];
         }
+        return ['type' => 'error', 'message' => "Une erreur est survenue lors de l'inscription"];
     }
     return $data;
 }
