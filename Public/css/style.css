@@ -1786,36 +1786,35 @@ input, textarea {
         padding: 0 20px; /* Reduce padding for mobile view */
         }
 
-        .scroll-to-top-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #007bff; /* ou votre couleur préférée */
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: none; /* caché par défaut */
-            z-index: 999;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .scroll-to-top-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-        }
-        
-        .scroll-to-top-btn.visible {
-            display: block;
-            opacity: 1;
-        }
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    display: none; /* Le bouton est caché par défaut */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* S'assurer que le bouton est au-dessus de tout */
+}
 
+/* Classe pour afficher le bouton */
+.scroll-to-top-btn.show {
+    display: flex; /* Utiliser flex pour centrer l'icône */
+}
 
-
-
+.scroll-to-top-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+}
 
 .scroll-to-top-btn i {
     font-size: 24px;

@@ -1,6 +1,6 @@
 $(function() {
     const Blog = document.querySelector('#blog-list');
-    if(Blog ){
+    if(Blog){
     Getter(baseUrl+'/blogs/lireAll', (response)=>{
         response.data.forEach((blog)=>{
             Blog.innerHTML+=`<div class="blog-post">

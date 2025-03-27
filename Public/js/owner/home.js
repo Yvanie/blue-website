@@ -21,9 +21,9 @@ $(function() {
                 <p class="date">${action}</p>
             </div>
             <hr class="divider">
-            <h2>${decodeHTMLEntities(blog.title)}</h2>
+            <h2>${blog.title}</h2>
             <p class="blog-description limited-description">
-               ${decodeHTMLEntities(blog.content)}
+               ${blog.content}
             </p>
             <div class="button-container">
                 <a href="index.php?p=blogs&id=${blog.idBlogs}" class="btn">
@@ -33,4 +33,6 @@ $(function() {
         </div>`;
         })
     })
+
+    
 });

@@ -18,18 +18,6 @@ class BlogsController extends Controller
        $getBlogs=$this->instance->lireTout();
         if($getBlogs){
             foreach($getBlogs as $value){
-                // Décode le contenu HTML
-                $content = html_entity_decode($value->content);
-                // Nettoie les balises HTML
-                $cleanContent = strip_tags($content);
-                // Limite le contenu à 150 caractères et ajoute "..."
-                $value->content = mb_strlen($cleanContent) > 150 ? 
-                    mb_substr($cleanContent, 0, 150) . '...' : 
-                    $cleanContent;
-                
-                // Décode aussi le titre
-                $value->title = html_entity_decode($value->title);
-                
                 array_push($array['data'], $value);
             }
         }
@@ -40,19 +28,7 @@ class BlogsController extends Controller
         $getBlogs=$this->instance->lireTout(4);
          if($getBlogs){
              foreach($getBlogs as $value){
-                // Décode le contenu HTML
-                $content = html_entity_decode($value->content);
-                // Nettoie les balises HTML
-                $cleanContent = strip_tags($content);
-                // Limite le contenu à 150 caractères
-                $value->content = mb_strlen($cleanContent) > 150 ? 
-                    mb_substr($cleanContent, 0, 150) . '...' : 
-                    $cleanContent;
-                
-                // Décode aussi le titre
-                $value->title = html_entity_decode($value->title);
-                
-                array_push($array['data'], $value);
+                 array_push($array['data'], $value);
              }
          }
          return $array;
@@ -85,69 +61,135 @@ class BlogsController extends Controller
        
     }
     public function create(){
-        if(!$_POST) {
-            return ['type' => 'error', 'message' => "Aucune donnée reçue"];
-        }
-
-        $dataSanit = [];
-        foreach($_POST as $cle => $valeur) {
-            if(empty($valeur) && $cle !== 'image') {
-                return ['type' => 'error', 'message' => "Veuillez remplir tous les champs"];
+        $data=[];   
+        if($_POST){
+            $dataSanit=[];
+            foreach($_POST as $cle => $valeur){
+                if(empty($valeur)){
+                    $data = ['type'=>'error', 'message'=>"Veuillez remplir tous les champs"];
+    
+                    return $data;
+                    die();
+                }
+                if($cle != 'image'){
+                    $dataSanit[$cle] = htmlspecialchars($valeur);
+                }
+              
             }
-            if($cle !== 'image') {
-                $dataSanit[$cle] = htmlspecialchars($valeur);
+            $allowedExtension = ['jpg', 'jpeg', 'png', 'avif', 'webp'];
+            $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);           
+            
+            if(!in_array($extension, $allowedExtension)){
+                $data = ['type'=>'error', 'message'=>"L'extension de l'image n'est pas autorisée"];
+                return $data;
+                die();
+            }
+            $imagePath = 'Public/img/blogs/'.$_FILES['image']['name'];
+            move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
+            $dataSanit['image'] = $imagePath;
+            $dataSanit['createAt']=date('Y-m-d H:i:s');
+            
+            if($this->instance->hydrated($dataSanit)->Create()){
+                $newsletter = new Newsletters;
+                $getContact = $newsletter->lireTout();
+                if($getContact  && count($getContact) > 0){
+                $lastId = $this->instance->lireLast()->id;
+                $mail = new PHPMailer(true);
+            try {
+                //Server settings
+                                 //Enable verbose debug output
+                $mail->isSMTP();                                            //Send using SMTP
+                $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+                $mail->Username   = 'nwouatouyvanienoelle@gmail.com';                     //SMTP username
+                $mail->Password   = 'rkyy iewa ozhj uqek';                               //SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+                $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+                //Recipients
+                $mail->setFrom('nwouatouyvanienoelle@gmail.com', 'Blue Ocean Group');
+                foreach($getContact as $value){
+                    $mail->addAddress($value->email);
+                 
+
+                //Content
+                $mail->isHTML(true);                                  //Set email format to HTML
+                $mail->Subject = 'New Post';
+                $mail->Body = '🎉 Nouveauté ! 🎉 <br><br>  
+                    J’ai publié de nouveaux contenus passionnants que vous ne voudrez pas manquer ! 🔥 <br><br>  
+                    Je peux même vous partager un extrait exclusif. 💡  
+                    Découvrez les dernières mises à jour dès maintenant ! 🚀<br><br>  
+                    👉 <a href="'.URL.'/index.php?p=blogs&id='.$lastId.'">Cliquez ici pour en savoir plus</a> 👈<br><br>
+                    <p>Si vous ne voullez plus recevoir ces notifications, vous pouvez vous désabonner en cliquant sur le lien ci-dessous :
+                        </p><br><br>
+                    <a href="'.URL.'/index.php?p=unsubscribe&token='.$value->confirmtoken.'">Désabonner</a><br><br>
+                    À très vite et merci pour votre soutien ! 💙';
+                $mail->send();
+            }
+            } catch (Exception $e) {
+            }}
+                $data=['type'=>'success', 'message'=>"Le blog a bien été ajouté"];
             }
         }
-
-        // Récupérer l'image depuis le champ caché
-        if(!empty($_POST['image'])) {
-            $dataSanit['image'] = $_POST['image'];
-        } else {
-            return ['type' => 'error', 'message' => "L'image est obligatoire"];
-        }
-
-        $dataSanit['createAt'] = date('Y-m-d H:i:s');
-        
-        if($this->instance->hydrated($dataSanit)->Create()) {
-            // Gestion des newsletters
-            $this->sendNewsletterNotification();
-            return ['type' => 'success', 'message' => "Le blog a bien été ajouté"];
-        }
-
-        return ['type' => 'error', 'message' => "Erreur lors de l'ajout du blog"];
+        return $data;
     }
     public function update(){
-        if(!$_POST) {
-            return ['type' => 'error', 'message' => "Aucune donnée reçue"];
-        }
-
-        $dataSanit = [];
-        foreach($_POST as $cle => $valeur) {
-            if(empty($valeur) && $cle !== 'image') {
-                continue;
+        $data=[];   
+        if($_POST){
+            $dataSanit=[];
+            foreach($_POST as $cle => $valeur){
+                if(empty($valeur)){
+                    if($cle !== 'image'){
+                        continue;
+                    }else{
+                        $data = ['type'=>'error', 'message'=>"Veuillez remplir tous les champs"];
+    
+                    return $data;
+                    die();
+                        
+                    }
+                    
+                }
+                if($cle != 'image'){
+                    $dataSanit[$cle] = htmlentities(trim($valeur));
+                }
+              
             }
-            if($cle !== 'image') {
-                $dataSanit[$cle] = htmlentities(trim($valeur));
-            }
-        }
 
-        // Gestion de l'image
-        if(!empty($_POST['image'])) {
-            $dataSanit['image'] = $_POST['image'];
-            // Supprimer l'ancienne image si elle existe
-            $oldBlog = $this->instance->lireOne($_POST['idBlogs']);
-            if($oldBlog && $oldBlog->image && file_exists($oldBlog->image)) {
-                unlink($oldBlog->image);
-            }
-        }
 
-        $dataSanit['updateAt'] = date('Y-m-d H:i:s');
+            if(!empty($_FILES['image']['name'])){
+                
+
+            $allowedExtension = ['jpg', 'jpeg', 'png', 'avif', 'webp'];
+            $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                     
+            
+            if(!in_array($extension, $allowedExtension)){
+                $data = ['type'=>'error', 'message'=>"L'extension de l'image n'est pas autorisée"];
+                return $data;
+                die();
+            }
+            $imagePath = 'Public/img/blogs/'.$_FILES['image']['name'];
+            
+            if(move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)){
+                $dataSanit['image'] = $imagePath;
+                ($this->instance->lireOne($_POST['idBlogs'])->image) ? unlink($this->instance->lireOne($_POST['idBlogs'])->image) : '';
+                
+
+            }else{ 
+                return ['type'=>'error', 'message'=>"Une erreur s'est produite lors de l'upload de l'image"];
+                exit;
+            }
+            
+        }
         
-        if($this->instance->hydrated($dataSanit)->update($dataSanit['idBlogs'])) {
-            return ['type' => 'success', 'message' => "Le blog a bien été modifié"];
+            $dataSanit['updateAt']=date('Y-m-d H:i:s');
+                        
+            $this->instance->hydrated($dataSanit);
+            $this->instance->update($dataSanit['idBlogs']);
+            $data=['type'=>'success', 'message'=>"Le blog a bien été modifié"];
         }
-
-        return ['type' => 'error', 'message' => "Erreur lors de la modification du blog"];
+        return $data;
     }
     public function delete(int $id){
         $data=[];
@@ -157,16 +199,13 @@ class BlogsController extends Controller
     }
     public function setRender()
     {
-        $mycss=[];
+
         $myjs=[];
         if(isset($_SESSION['id'])){
-            $mycss[]="https://unpkg.com/dropzone@5/dist/min/dropzone.min";
-            $myjs[]="https://unpkg.com/dropzone@5/dist/min/dropzone.min";
-            $myjs[]='https://cdn.tiny.cloud/1/f1y7v7150ns3o85ca97imus6o7g98tojv2da2ezc4u8v78ov/tinymce/7/tinymce.min';
             $myjs[]='Public/js/owner/blogs';
-            return $this->render("Backend/blogs", $mycss, $myjs, 'app');
+            return $this->render("Backend/blogs", [], $myjs, 'app');
         }else{
-            $myjs[]='Public/js/script';
+        $myjs[]='Public/js/script';
         $myjs[]='Public/js/owner/blog';
         $filename=(isset($_GET['id']))? 'Frontend/single_post': 'Frontend/blog';
         return $this->render($filename, [],  $myjs);
@@ -174,78 +213,6 @@ class BlogsController extends Controller
         
         
     }
-    public function uploadImage() {
-        $response = ['success' => false, 'filename' => ''];
-        
-        if(isset($_FILES['image'])) {
-            $allowedExtension = ['jpg', 'jpeg', 'png', 'avif', 'webp'];
-            $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            
-            if(in_array($extension, $allowedExtension)) {
-                $filename = uniqid() . '.' . $extension;
-                $imagePath = 'Public/img/blogs/' . $filename;
-                
-                if(move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
-                    return [
-                        'type' => 'success',
-                        'filename' => $imagePath
-                    ];
-                }
-            }
-        }
-        return [
-            'type' => 'error',
-            'message' => "L'upload de l'image a échoué"
-        ];
-    }
 
-    private function sendNewsletterNotification() {
-        try {
-            $newsletter = new Newsletters;
-            $getContact = $newsletter->lireBy(['status' => 'enabled']);
-            if(!$getContact || count($getContact) === 0) {
-                return;
-            }
 
-            $lastId = $this->instance->lireLast()->id;
-            $mail = new PHPMailer(true);
-
-            // Configuration du serveur SMTP
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'nwouatouyvanienoelle@gmail.com';
-            $mail->Password = 'rkyy iewa ozhj uqek';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-            $mail->Port = 465;
-
-            // Configuration de l'expéditeur
-            $mail->setFrom('nwouatouyvanienoelle@gmail.com', 'Blue Ocean Group');
-            
-            // Contenu du mail
-            $mail->isHTML(true);
-            $mail->Subject = 'New Post';
-            
-            foreach($getContact as $value) {
-                $mail->addAddress($value->email);
-                $mail->Body = $this->getNewsletterTemplate($lastId, $value->confirmtoken);
-                $mail->send();
-                $mail->clearAddresses();
-            }
-        } catch (Exception $e) {
-            // Gérer silencieusement l'erreur d'envoi de newsletter
-            return;
-        }
-    }
-
-    private function getNewsletterTemplate($lastId, $confirmToken) {
-        return '🎉 Nouveauté ! 🎉 <br><br>
-            J\'ai publié de nouveaux contenus passionnants que vous ne voudrez pas manquer ! 🔥 <br><br>
-            Je peux même vous partager un extrait exclusif. 💡
-            Découvrez les dernières mises à jour dès maintenant ! 🚀<br><br>
-            👉 <a href="'.URL.'/index.php?p=blogs&id='.$lastId.'">Cliquez ici pour en savoir plus</a> 👈<br><br>
-            <p>Si vous ne voulez plus recevoir ces notifications, vous pouvez vous désabonner en cliquant sur le lien ci-dessous :</p><br><br>
-            <a href="'.URL.'/index.php?p=unsubscribe&token='.$confirmToken.'">Désabonner</a><br><br>
-            À très vite et merci pour votre soutien ! 💙';
-    }
 }
