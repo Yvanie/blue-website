@@ -112,7 +112,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="content">Description</label>
-                                    <textarea name="content" id="content" class="form-control form" placeholder="Enter your content ..."></textarea>
+                                    <textarea name="content" id="formEditBlogs_content" class="form-control form" placeholder="Enter your content ..."></textarea>
                                 </div>
                             </div>
                             <input type="hidden" name="idUser" id="idUser" class="form-control form" value="<?= $_SESSION['id'] ?>">

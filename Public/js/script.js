@@ -1,22 +1,40 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion de la navbar
+    const infoNavbar = document.querySelector('.info-navbar');
+    let lastScroll = 0;
 
-const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.scrollY;
+        
+        // Gestion de la navbar
+        if (currentScroll > lastScroll && currentScroll > 100) {
+            infoNavbar.classList.add('hidden');
+        } else {
+            infoNavbar.classList.remove('hidden');
+        }
+        lastScroll = currentScroll;
 
-window.onscroll = function () {
-    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        scrollToTopBtn.classList.add('show');
-    } else {
-        scrollToTopBtn.classList.remove('show');
-    }
-};
-
-scrollToTopBtn.onclick = function () {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth' 
+        // Gestion du bouton scroll-to-top
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        if (currentScroll > 300) {
+            scrollToTopBtn.classList.add('visible');
+        } else {
+            scrollToTopBtn.classList.remove('visible');
+        }
     });
-};
 
-const infoNavbar = document.querySelector('.info-navbar');
+    // Gestion du scroll-to-top
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    scrollToTopBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+
+
 const navbar = document.querySelector('.navbar');
 
 
@@ -164,50 +182,50 @@ const renderPosts = () => {
     });
 };
 
-const renderPagination = () => {
-    const totalPages = Math.ceil(blogPosts.length / postsPerPage);
-    const pageNumbersContainer = document.getElementById('page-numbers');
-    pageNumbersContainer.innerHTML = '';
+// const renderPagination = () => {
+//     const totalPages = Math.ceil(blogPosts.length / postsPerPage);
+//     const pageNumbersContainer = document.getElementById('page-numbers');
+//     pageNumbersContainer.innerHTML = '';
 
-    for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement('button');
-        pageButton.classList.add('pagination-btn');
-        pageButton.textContent = i;
-        pageButton.onclick = () => {
-            currentPage = i;
-            renderPosts();
-            renderPagination();
-        };
-        if (i === currentPage) {
-            pageButton.style.backgroundColor = '#2980b9';
-        }
-        pageNumbersContainer.appendChild(pageButton);
-    }
+//     for (let i = 1; i <= totalPages; i++) {
+//         const pageButton = document.createElement('button');
+//         pageButton.classList.add('pagination-btn');
+//         pageButton.textContent = i;
+//         pageButton.onclick = () => {
+//             currentPage = i;
+//             renderPosts();
+//             renderPagination();
+//         };
+//         if (i === currentPage) {
+//             pageButton.style.backgroundColor = '#2980b9';
+//         }
+//         pageNumbersContainer.appendChild(pageButton);
+//     }
 
-    document.getElementById('prev-page').disabled = currentPage === 1;
-    document.getElementById('next-page').disabled = currentPage === totalPages;
-};
+//     document.getElementById('prev-page').disabled = currentPage === 1;
+//     document.getElementById('next-page').disabled = currentPage === totalPages;
+// };
 
-document.getElementById('prev-page').onclick = () => {
-    if (currentPage > 1) {
-        currentPage--;
-        renderPosts();
-        renderPagination();
-    }
-};
+// document.getElementById('prev-page').onclick = () => {
+//     if (currentPage > 1) {
+//         currentPage--;
+//         renderPosts();
+//         renderPagination();
+//     }
+// };
 
-document.getElementById('next-page').onclick = () => {
-    const totalPages = Math.ceil(blogPosts.length / postsPerPage);
-    if (currentPage < totalPages) {
-        currentPage++;
-        renderPosts();
-        renderPagination();
-    }
-};
+// document.getElementById('next-page').onclick = () => {
+//     const totalPages = Math.ceil(blogPosts.length / postsPerPage);
+//     if (currentPage < totalPages) {
+//         currentPage++;
+//         renderPosts();
+//         renderPagination();
+//     }
+// };
 
 
 renderPosts();
-renderPagination();
+// renderPagination();
 
 
 
