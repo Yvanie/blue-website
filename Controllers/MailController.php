@@ -78,7 +78,7 @@ public function create(){
 
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
-                $mail->Subject = '📩 Confirmez votre adresse e-mail';  
+                $mail->Subject = 'Confirmez votre adresse e-mail';  
                 $mail->Body = 'Bonjour, <br><br>  
                 Merci de vous être inscrit ! 🎉 Pour finaliser votre inscription et accéder à toutes nos nouveautés, veuillez confirmer votre adresse e-mail. 📧<br><br>  
                 Cliquez sur le lien ci-dessous pour activer votre compte :<br><br>  

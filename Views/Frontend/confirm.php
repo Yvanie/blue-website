@@ -1,9 +1,4 @@
-<div class="cont">
-    <div class="cont-header">
-        <h1>Confirmation d'inscription</h1>
-        <p><b>Accueil / Confirmation</b></p>
-    </div>
-</div>
+
 
 <div class="confirm-content">
     <div class="confirm-box">

@@ -1,22 +1,20 @@
-<div class="cont">
-    <div class="cont-header">
-        <h1>Désabonnement</h1>
-        <p><b>Accueil / Désabonnement</b></p>
-    </div>
-</div>
+
 
 <div class="unsubscribe-content">
     <div class="unsubscribe-box">
         <div class="icon-container">
-            <i class="fas fa-heart-broken"></i>
+            <i class="fas fa-heart-broken icon"></i>
         </div>
         <div class="message">
+            <p class="intro-text">Nous sommes tristes de vous voir partir. Si vous changez d'avis, 
+                nous serions ravis de vous accueillir à nouveau !</p>
+            
             <?php if(isset($data['message'])): ?>
                 <div class="alert alert-<?php echo $data['type']; ?>">
                     <?php echo $data['message']; ?>
                 </div>
             <?php endif; ?>
-            
+
             <?php if(isset($data['regret'])): ?>
                 <div class="regret-message">
                     <?php echo $data['regret']; ?>
@@ -34,4 +32,4 @@
             </a>
         </div>
     </div>
-</div> 
+</div>
