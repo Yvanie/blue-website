@@ -361,58 +361,24 @@ body {
 }
 
 .values {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Deux colonnes de largeur égale */
-    gap: 20px; /* Espace entre les éléments */
-    margin: 20px 0;
+    display: grid; /* Use grid layout for values */
+    grid-template-columns: repeat(1, 1fr); /* Two columns */
+  
 }
-
 .value-item {
     padding: 15px;
     border-radius: 5px;
     display: flex;
     align-items: center;
     font-size: 1.2rem;
-    color: #333;
-    background-color: #f8f9fa; /* Fond léger pour chaque item */
-    transition: transform 0.3s ease;
-}
-
-.value-item:hover {
-    transform: translateY(-3px); /* Petit effet au survol */
-    background-color: #f0f8ff; /* Changement de couleur au survol */
+    color: #333; /* Icon and text color */
 }
 
 .value-item i {
-    font-size: 2rem;
-    margin-right: 15px;
+    font-size: 2rem; /* Icon size */
+    margin-right: 10px; /* Space between icon and text */
     color: #28a0e2;
 }
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .values {
-        grid-template-columns: repeat(2, 1fr); /* Maintenir 2 colonnes même sur mobile */
-        gap: 10px; /* Réduire l'espace sur mobile */
-    }
-
-    .value-item {
-        font-size: 1rem; /* Réduire la taille du texte */
-    padding: 10px;
-    }
-
-    .value-item i {
-        font-size: 1.5rem; /* Réduire la taille des icônes */
-    margin-right: 10px; 
-    }
-}
-
-@media (max-width: 480px) {
-.value-item {
-        font-size: 0.9rem; /* Encore plus petit pour les très petits écrans */
-    }
-}
-
 .about-content .btn {
     padding: 10px 20px;
     border-radius: 5px;
@@ -427,6 +393,7 @@ body {
 .about-content .btn:hover {
     background-color: #0056b3; /* Darker on hover */
 }
+
 /* Service section */
 .services-section {
     padding: 50px;
@@ -1449,173 +1416,145 @@ input, textarea {
     }
 }
 
-/* Section Styling */
+/* about page */
 #mission-values-vision {
     padding: 60px 0;
-    background-color: #ffffff;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
 }
 
 .container {
-    width: 90%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 15px;
 }
 
-/* Section header */
-.section-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.section-header h2 {
-    font-size: 36px;
-    color: #333;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.section-header p {
-    font-size: 18px;
-    color: #777;
-    line-height: 1.6;
-}
-
-/* Content Styling */
+/* Card Layout */
 .content {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-    margin-bottom: 60px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Space between cards */
+    flex-wrap: wrap; /* Ensure cards wrap on smaller screens */
+    text-align: justify;
 }
 
 .card {
     background-color: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;  /* Ensures content takes up available space */
-}
-.card .mission{
-    margin-top: 10px;
-}
-/* Hover effect for cards */
-.card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 50px;
+    width: 20%; /* Each card takes up 30% of the row */
+    box-shadow: 0 4px 5px rgba(0, 123, 255, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    opacity: 1;
 }
 
-/* Icon Styling for Cards */
-.card .icon {
+/* Mission & Values Cards: Left Border & Hover Effect */
+.card.mission, .card.values {
+    border-left: 5px solid #007bff; /* Left border for mission & values */
+    padding-top: 20px;  /* Space above the border */
+    padding-bottom: 20px;  /* Space below the border */
+}
+
+.card.mission:hover, .card.values:hover {
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    background-color: #f0f8ff;  /* Light blue background on hover */
+    border-left: 0;  /* Left border disappears on hover */
+}
+
+/* Vision & Signature Section (Split into Two Rows) */
+.card.vision-signature {
+    padding-left: 5px;
+    width: 30%; /* Adjusted width for the middle card */
+    display: flex;
+    flex-direction: column; /* Stack Vision and Signature vertically */
+}
+
+.vision, .signature {
+    width: 100%; /* Full width for each row */
+    margin-bottom: 20px; /* Add space between rows */
+}
+
+/* Vision Card */
+.vision {
+   
+    padding: 20px;
+}
+
+
+
+/* Signature Card */
+.signature {
+    
+    padding: 20px;
+}
+
+
+/* Hover Effect for Icons (all cards) */
+.card:hover .icon {
+    color: #0056b3;
+}
+
+/* Card Titles */
+.card h3 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.card h4 {
+    font-size: 1.4em;
+    color: #333;
+    margin-top: 10px;
+}
+
+.card p {
+    font-size: 1.2em;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+/* Icons Styling */
+.icon {
     font-size: 50px;
     color: #007bff;
-    
+    margin-bottom: 20px;
     transition: color 0.3s ease;
 }
 
-/* Heading Styling for Cards */
-.card h3, .card h2 {
-    font-size: 1.8em;
-    color: #333;
-    font-weight: 600;
-}
-.card p{
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #555;
-    flex-grow: 1;
-}
-
-/* List Styling */
+/* List Styling for Values */
 .card ul {
+    list-style-type: disc;
     padding-left: 20px;
     text-align: left;
-    color: #555;
-    flex-grow: 1;  /* Ensures list takes up remaining space */
 }
 
 .card ul li {
-    font-size: 16px;
-    margin-bottom: 10px;
-    width: 100%;  /* Ensure list items take full width */
-}
-
-/* Values Core Section */
-.values-core {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);  /* Two cards per row */
-    gap: 30px;
-    margin-top: 60px;
-    background-color: #ffffff;  /* White background for section */
-    padding: 40px 0;  /* Padding for spacing */
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);  /* Soft shadow */
-    border-radius: 12px;  /* Rounded corners for values core */
-    padding-top: 50px;
-    padding-bottom: 50px;
-}
-
-/* Individual Value Card Styling */
-.value-card {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    text-align: center;
-}
-.value-card h2 {
-    font-size: 1.8rem;
-    color: #007BFF;
-  }
-.value-card p{
-    font-size: 1.1rem;
-  line-height: 1.6;
-  color: #555;
-  flex-grow: 1;
-  margin-bottom: 20px;
-}
-
-.value-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.value-card .icon {
-    font-size: 40px;
-    color: #007bff;
-    margin-bottom: 15px;
-}
-
-.value-card ul {
-    padding-left: 20px;
-    text-align: left;
+    font-size: 1.2em;
     color: #555;
-}
-
-.value-card ul li {
-    font-size: 16px;
     margin-bottom: 10px;
 }
 
-/* Mobile Responsiveness */
+/* Responsive Design */
 @media (max-width: 768px) {
-    .values-core {
-        grid-template-columns: 1fr;  /* Stack cards in a single column on smaller screens */
+    .content {
+        flex-direction: column;
+        align-items: center;
     }
 
-    .card h3, .card h2 {
-        font-size: 20px;  /* Smaller font size for headings on mobile */
+    .card {
+        width: 80%; /* Cards take up more space on smaller screens */
+        margin-bottom: 30px;
     }
 
-    .card ul li {
-        font-size: 14px;  /* Smaller font size for list items on mobile */
+    .card.vision-signature {
+        width: 80%; /* Full width for vision-signature section */
+        flex-direction: column;
+    }
+
+    .vision, .signature {
+        width: 100%; /* Cards inside vision-signature take full width */
     }
 }
-
 
 /* service page */
 .services-section-page {
@@ -1773,51 +1712,6 @@ input, textarea {
 @media (max-width: 480px) {
     .services-section-page .text {
         padding: 0 20px; /* Reduce padding for mobile view */
-        }
-
-.scroll-to-top-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    display: none; /* Le bouton est caché par défaut */
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* S'assurer que le bouton est au-dessus de tout */
-}
-
-/* Classe pour afficher le bouton */
-.scroll-to-top-btn.show {
-    display: flex; /* Utiliser flex pour centrer l'icône */
-}
-
-.scroll-to-top-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-3px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.scroll-to-top-btn i {
-    font-size: 24px;
-    color: white;
-}
-}
-
-/* Ajustements pour mobile */
-@media (max-width: 768px) {
-    .scroll-to-top-btn {
-        width: 40px;
-        height: 40px;
-        bottom: 15px;
-        right: 15px;
     }
 
     .services-section-page h1 {
@@ -2047,283 +1941,9 @@ input, textarea {
         font-size: 12px;
     }
 }
-.error-message {
-    color: #fff; /* Red color for error messages */
-    background-color: #e74c3c;
-    padding: 4px;
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.success-message {
-    color: #fff; /* Green color for success messages */
-    color: #fff;
-    padding: 4px;
-    display: block;
-    background-color: #2ecc71;;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-/* Container for the header */
-.cont-confirm {
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
 
 
 
-/* Main confirmation content */
-.confirm-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f7fc;
-}
-
-.confirm-box {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 500px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; /* Ensures all elements are centered */
-}
-
-.confirm-content .icon-container {
-    margin-bottom: 20px;
-}
-
-.confirm-content .icon-container .icon {
-    font-size: 60px;
-    color: #007BFF; /* Green color for success icon */
-}
-
-.confirm-content h2 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.confirm-content .confirmation-message {
-    margin-bottom: 25px;
-}
-
-.confirm-content .confirmation-message .text {
-    font-size: 18px;
-    color: #555;
-    margin-bottom: 10px;
-}
-
-.confirm-content .confirmation-message .sub-text {
-    font-size: 16px;
-    color: #777;
-}
-
-/* Button styling */
-.confirm-content .action-buttons {
-    margin-top: 20px;
-}
-
-.confirm-content .btn {
-    text-decoration: none;
-    padding: 12px 25px;
-    font-size: 16px;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.confirm-content .btn:hover {
-    background-color: #007BFF;
-}
-
-.confirm-content.btn1 i {
-    margin-right: 10px;
-}
-
-/* Container for the header */
-.cont-unsubscribe {
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Header content styling */
-.cont-header-unsubscribe {
-    text-align: center;
-    padding: 20px 0;
-}
-
-.cont-header-unsubscribe h1 {
-    font-size: 32px;
-    color: #333;
-}
-
-.cont-header-unsubscribe p {
-    font-size: 16px;
-    color: #888;
-}
-
-/* Main unsubscribe content */
-.unsubscribe-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f7fc;
-}
-
-.unsubscribe-box {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 500px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; /* Ensures all elements are centered */
-}
-
-.icon-container {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-
-.unsubscribe-box h2 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.unsubscribe-box .message {
-    margin-bottom: 25px;
-}
-/* Introductory text styling */
-.intro-text {
-    font-size: 18px;
-    color: #555;
-    margin-bottom: 20px;
-    font-style: italic;
-}
-/* Style for alert message */
-.unsubscribe-box .alert {
-    font-size: 18px;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-}
-
-.unsubscribe-box .alert-success {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.unsubscribe-box .alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-/* Regret message and resubscribe */
-.unsubscribe-box .regret-message {
-    font-size: 18px;
-    color: #777;
-    margin-bottom: 20px;
-}
-
- .resubscribe-section {
-    margin-top: 20px;
-}
-
-/* Button styling */
-.unsubscribe-box .btn {
-    text-decoration: none;
-    padding: 12px 25px;
-    font-size: 16px;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.unsubscribe-box .btn:hover {
-    background-color: #007BFF;
-}
-
-.unsubscribe-box .btn-primary {
-    background-color: #007bff;
-}
-
-.unsubscribe-box .btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.btn1 i {
-    margin-right: 10px;
-}
-.scroll-to-top-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    padding: 15px;
-    font-size: 24px;
-    cursor: pointer;
-    display: none; 
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-    text-align: center;
-    line-height: 1;
-}
-
-.scroll-to-top-btn:hover {
-    background-color: #0056b3;
-}
-
-
-.scroll-to-top-btn.show {
-    display: block;
-}
-
-.scroll-to-top-btn i {
-    font-size: 30px;
-}
-#formAddNewsletters button[type="submit"] {
-    transition: all 0.3s ease;
-}
-
-#formAddNewsletters button[type="submit"]:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.fa-spinner {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
 .sp-container {
     width: 80%;
     margin: 50px auto;
@@ -2545,4 +2165,157 @@ input, textarea {
         font-size: 16px;
         margin: 0 6px;
     }
+}
+.values-core {
+    padding-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto); 
+    grid-gap: 30px;
+    grid-template-areas: 
+        "humanity ethics"
+        "joint-satisfaction simplicity";
+}
+
+.value-card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px; 
+}
+
+.value-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+.value-card p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    flex-grow: 1; 
+    margin-bottom: 20px; 
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.value-card h2 {
+    font-size: 1.8rem;
+    color: #007BFF; 
+}
+
+.humanity {
+    grid-area: humanity;
+}
+
+.ethics {
+    grid-area: ethics;
+}
+
+.joint-satisfaction {
+    grid-area: joint-satisfaction;
+}
+
+.simplicity {
+    grid-area: simplicity;
+}
+
+@media (max-width: 1024px) {
+    .values-core {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+            "humanity humanity"
+            "ethics joint-satisfaction"
+            "simplicity simplicity";
+    }
+}
+
+@media (max-width: 768px) {
+    .values-core {
+        grid-template-columns: 1fr; 
+        grid-template-areas: 
+            "humanity"
+            "ethics"
+            "joint-satisfaction"
+            "simplicity";
+    }
+}
+
+.error-message {
+    color: #fff; 
+    background-color: #e74c3c;
+    padding: 4px;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.success-message {
+    color: #fff;
+    padding: 4px;
+    display: block;
+    background-color: #2ecc71;;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    display: none; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    text-align: center;
+    line-height: 1;
+}
+
+.scroll-to-top-btn:hover {
+    background-color: #0056b3;
+}
+
+
+.scroll-to-top-btn.show {
+    display: block;
+}
+
+.scroll-to-top-btn i {
+    font-size: 30px;
+}
+#formAddNewsletters button[type="submit"] {
+    transition: all 0.3s ease;
+}
+
+#formAddNewsletters button[type="submit"]:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

@@ -38,8 +38,13 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="image">Image</label>
-                                    <input type="file" class="form-control form" id="image" name="image" placeholder="Enter your image link...">
+                                    <label>Image</label>
+                                    <div id="imageDropzone" class="dropzone">
+                                        <div class="fallback">
+                                            <input type="file" name="image" />
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="image" id="image">
                                 </div>
                             </div>
                             <div class="col-6">
@@ -47,14 +52,11 @@
                                     <label for="title">Title</label>
                                     <input type="text" class="form-control form" id="title" name="title" placeholder="Enter the blog title...">
                                 </div>
-                            </div>
-                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="authors">Author</label>
                                     <input type="text" class="form-control form" id="authors" name="authors" placeholder="Enter Author Name...">
                                 </div>
                             </div>
-                            
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="content">Description</label>
@@ -85,11 +87,16 @@
                 <div id="clientMsg"></div>
                 <form method="post" id="formEditBlogs" enctype="multipart/form-data">
                     <div class="modal-body">
-                    <div class="row">
+                        <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="image">Image</label>
-                                    <input type="file" class="form-control form" id="image" name="image" placeholder="Enter your image link...">
+                                    <label>Image</label>
+                                    <div id="imageDropzoneEdit" class="dropzone">
+                                        <div class="fallback">
+                                            <input type="file" name="image" />
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="image" id="image">
                                 </div>
                             </div>
                             <div class="col-6">
@@ -97,18 +104,15 @@
                                     <label for="title">Title</label>
                                     <input type="text" class="form-control form" id="title" name="title" placeholder="Enter the blog title...">
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="content">Description</label>
-                                    <textarea name="content" id="content" class="form-control form" placeholder="Enter your content ..."></textarea>
-                                </div>
-                            </div>
-                           
-                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="authors">Author</label>
                                     <input type="text" class="form-control form" id="authors" name="authors" placeholder="Enter Author Name...">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="content">Description</label>
+                                    <textarea name="content" id="formEditBlogs_content" class="form-control form" placeholder="Enter your content ..."></textarea>
                                 </div>
                             </div>
                             <input type="hidden" name="idUser" id="idUser" class="form-control form" value="<?= $_SESSION['id'] ?>">
