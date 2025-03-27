@@ -1,7 +1,33 @@
+Dropzone.autoDiscover = false;
 $(function(){
     const inputs = document.querySelectorAll('#formAddBlogs .form-control');
     const alertCreate = document.querySelector('#modalCreate #clientMsg');
     const alertEdit = document.querySelector('#ModalEdit #clientMsg');
+    
+    // Configuration commune pour les deux Dropzones
+    const dropzoneConfig = {
+        url: baseUrl+"/blogs/uploadImage",
+        paramName: "image",
+        maxFiles: 1,
+        acceptedFiles: "image/*",
+        addRemoveLinks: true,
+        dictDefaultMessage: "Déposez votre image ici ou cliquez pour sélectionner",
+        init: function() {
+            this.on("success", function(file, response) {
+                $(this.element).closest('form').find('input[name="image"]').val(response.filename);
+            });
+            this.on("error", function(file, errorMessage) {
+                console.error(errorMessage);
+            });
+            this.on("removedfile", function(file) {
+                $(this.element).closest('form').find('input[name="image"]').val('');
+            });
+        }
+    };
+
+    // Initialisation des Dropzones
+    const createDropzone = new Dropzone("#imageDropzone", dropzoneConfig);
+    const editDropzone = new Dropzone("#imageDropzoneEdit", dropzoneConfig);
     
     const BlogsTble = new DataTable('#blogs_table', {
         ajax: baseUrl+'/blogs/lireAll',
@@ -10,12 +36,14 @@ $(function(){
                 return `<img src="${data}" width="50" height="50" class="img-circle">`;
             }},
             { data: 'title' },
-            { data: 'content'},
+            { data: 'content', render: (data)=>{
+                return decodeHTMLEntities(data);
+            }},
             { data: 'createAt' },
             { data: 'authors'},
             { data: 'idBlogs', sortable: false, render:(data)=>{
-                return `<button class="btn btn-primary editBlogs" title="Modifier" data-id="${data}" ><span class="fa fa-edit"></span></button> 
-                <button class="btn btn-danger supprBlogs" title="Supprimer" data-id="${data}"><span class="fa fa-trash"></span></button>`; 
+                return `<a class="text-primary editBlogs" role="button" title="Modifier" data-id="${data}" ><i class="fa fa-edit"></i></a> 
+                <a class="text-danger supprBlogs" role="button" title="Supprimer" data-id="${data}"><i class="fa fa-trash"></i></a>`; 
             } },
         ]
     });
@@ -24,14 +52,30 @@ $(function(){
         e.preventDefault();
         const id = $(this).data('id');
         $('#ModalEdit').modal('show');
+        
         Getter(baseUrl+'/blogs/lireOne/'+id, (data)=>{
             $('#formEditBlogs #idBlogs').val(data.idBlogs);
             $('#formEditBlogs #title').val(data.title);
             $('#formEditBlogs #authors').val(data.authors);
             $('#formEditBlogs #content').val(data.content);
-            (data.image)? $('#formEditBlogs #image').val(data.image) : $('#formEditBlogs #image').val('');
-        })
+            
+            // Réinitialiser Dropzone et afficher l'image existante
+            editDropzone.removeAllFiles(true);
+            if(data.image) {
+                let mockFile = { name: data.image.split('/').pop(), size: 12345 };
+                editDropzone.displayExistingFile(mockFile, data.image);
+                $('#formEditBlogs input[name="image"]').val(data.image);
+            }
+            
+            // Réinitialiser TinyMCE
+            if(tinymce.get('content')) {
+                tinymce.get('content').setContent(data.content);
+            }
+        });
     });
+    tinymce.init({
+        selector: '#content'
+      });
     $('#formEditBlogs').submit(function(e){
         e.preventDefault();
         var formData = new FormData(this);
@@ -43,7 +87,11 @@ $(function(){
         }, formData);
     })
     $('#ModalEdit').on('hidden.bs.modal', function (e) {
-        $('#formEditBlogs')[0].reset(); 
+        $('#formEditBlogs')[0].reset();
+        editDropzone.removeAllFiles(true);
+        if(tinymce.get('content')) {
+            tinymce.get('content').setContent('');
+        }
         BlogsTble.ajax.reload();
     }); 
 
@@ -86,6 +134,10 @@ $(function(){
     })
     $('#modalCreate').on('hidden.bs.modal', function (e) {
         $('#formAddBlogs')[0].reset();
+        createDropzone.removeAllFiles(true);
+        if(tinymce.get('content')) {
+            tinymce.get('content').setContent('');
+        }
         BlogsTble.ajax.reload();                                                    
     })
 })
